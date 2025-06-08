@@ -52,8 +52,8 @@ export default function AuthForm() {
             } else {
                 await signInWithEmailAndPassword(auth, email, password);
             }
-        } catch (err: any) {
-            console.error("Error de autenticación:", err);
+        } catch (err: unknown) {
+            console.error(err);
             setError("Credenciales no válidas");
         }
     };
