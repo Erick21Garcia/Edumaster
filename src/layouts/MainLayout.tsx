@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import Link from 'next/link';
 
 export default function MainLayout({ children }: { children: ReactNode }) {
     return (
@@ -7,9 +8,9 @@ export default function MainLayout({ children }: { children: ReactNode }) {
                 <nav className="max-w-7xl mx-auto p-4 flex justify-between items-center">
                     <h1 className="text-xl font-bold text-red-600">EduMaster</h1>
                     <ul className="flex space-x-6 text-gray-700">
-                        <li><a href="/" className="hover:text-red-600">Inicio</a></li>
-                        <li><a href="#" className="hover:text-red-600">Cursos</a></li>
-                        <li><a href="/auth" className="hover:text-red-600">Iniciar sesión</a></li>
+                        <li><Link href="/" className="hover:text-red-600">Inicio</Link></li>
+                        <li><Link href="#" className="hover:text-red-600">Cursos</Link></li>
+                        <li><Link href="/auth" className="hover:text-red-600">Iniciar sesión</Link></li>
                     </ul>
                 </nav>
             </header>
