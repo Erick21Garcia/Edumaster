@@ -1,0 +1,56 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { auth, db } from "@/lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+
+export default function PerfilPage() {
+    const [userData, setUserData] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            if (!user) return;
+
+            const docRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                setUserData(docSnap.data());
+            }
+
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    if (loading) {
+        return <p className="text-center mt-10">Cargando perfil...</p>;
+    }
+
+    if (!userData) {
+        return <p className="text-center mt-10">No se pudo cargar tu perfil.</p>;
+    }
+
+    return (
+        <section className="max-w-xl mx-auto bg-white p-6 rounded-xl shadow text-black">
+            <h1 className="text-2xl font-bold mb-4">👤 Tu perfil</h1>
+            <ul className="space-y-3 text-gray-700">
+                <li>
+                    <strong>Correo:</strong> {userData.email}
+                </li>
+                <li>
+                    <strong>UID:</strong> {userData.uid}
+                </li>
+                <li>
+                    <strong>Fecha de registro:</strong>{" "}
+                    {userData.createdAt?.seconds
+                        ? new Date(userData.createdAt.seconds * 1000).toLocaleString()
+                        : "No disponible"}
+                </li>
+            </ul>
+        </section>
+    );
+}

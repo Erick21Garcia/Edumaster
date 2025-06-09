@@ -5,6 +5,8 @@ import { auth } from "@/lib/firebase";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import { FcGoogle } from "react-icons/fc";
 import {
     signInWithEmailAndPassword,
@@ -46,21 +48,62 @@ export default function AuthForm() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
+
         try {
             if (isRegister) {
-                await createUserWithEmailAndPassword(auth, email, password);
+                const res = await createUserWithEmailAndPassword(auth, email, password);
+                const user = res.user;
+
+                try {
+                    await setDoc(doc(db, "users", user.uid), {
+                        uid: user.uid,
+                        email: user.email,
+                        createdAt: serverTimestamp(),
+                    });
+                } catch (firestoreErr) {
+                    console.error("Error al guardar en Firestore:", firestoreErr);
+                    setError("Registro incompleto. Intenta de nuevo.");
+                    return;
+                }
+
             } else {
                 await signInWithEmailAndPassword(auth, email, password);
             }
-        } catch (err: unknown) {
-            console.error(err);
-            setError("Credenciales no válidas");
+
+        } catch (err: any) {
+            console.error("Error en autenticación:", err);
+
+            switch (err.code) {
+                case "auth/email-already-in-use":
+                    setError("El correo ya está registrado.");
+                    break;
+                case "auth/invalid-email":
+                    setError("El correo no es válido.");
+                    break;
+                case "auth/weak-password":
+                    setError("La contraseña debe tener al menos 6 caracteres.");
+                    break;
+                case "auth/wrong-password":
+                case "auth/user-not-found":
+                    setError("Correo o contraseña incorrectos.");
+                    break;
+                case "auth/too-many-requests":
+                    setError("Demasiados intentos. Intenta más tarde.");
+                    break;
+                default:
+                    setError("Ocurrió un error. Intenta de nuevo.");
+            }
         }
     };
 
     const loginWithGoogle = async () => {
         const provider = new GoogleAuthProvider();
-        await signInWithPopup(auth, provider);
+        try {
+            await signInWithPopup(auth, provider);
+        } catch (err) {
+            console.error("Error al iniciar sesión con Google", err);
+            setError("No se pudo iniciar sesión con Google.");
+        }
     };
 
     return (
