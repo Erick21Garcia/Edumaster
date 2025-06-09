@@ -1,8 +1,5 @@
 import Link from "next/link";
-import { FaUser, FaBook, FaChartPie, FaSignOutAlt } from "react-icons/fa";
-import { signOut } from "firebase/auth";
-import { auth } from "@/lib/firebase";
-import { redirect } from "next/navigation";
+import { FaUser, FaBook, FaChartPie } from "react-icons/fa";
 import LogoutButton from "@/components/LogoutButton";
 import "../globals.css";
 
@@ -11,11 +8,6 @@ export default function DashboardLayout({
 }: {
     children: React.ReactNode;
 }) {
-    const handleLogout = async () => {
-        "use client";
-        await signOut(auth);
-        redirect("/auth");
-    };
 
     return (
         <div className="flex min-h-screen bg-gray-100 text-black">

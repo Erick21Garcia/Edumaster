@@ -70,28 +70,31 @@ export default function AuthForm() {
                 await signInWithEmailAndPassword(auth, email, password);
             }
 
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error("Error en autenticación:", err);
+            if (typeof err === "object" && err !== null && "code" in err) {
+                const errorCode = (err as { code: string }).code;
 
-            switch (err.code) {
-                case "auth/email-already-in-use":
-                    setError("El correo ya está registrado.");
-                    break;
-                case "auth/invalid-email":
-                    setError("El correo no es válido.");
-                    break;
-                case "auth/weak-password":
-                    setError("La contraseña debe tener al menos 6 caracteres.");
-                    break;
-                case "auth/wrong-password":
-                case "auth/user-not-found":
-                    setError("Correo o contraseña incorrectos.");
-                    break;
-                case "auth/too-many-requests":
-                    setError("Demasiados intentos. Intenta más tarde.");
-                    break;
-                default:
-                    setError("Ocurrió un error. Intenta de nuevo.");
+                switch (errorCode) {
+                    case "auth/email-already-in-use":
+                        setError("El correo ya está registrado.");
+                        break;
+                    case "auth/invalid-email":
+                        setError("El correo no es válido.");
+                        break;
+                    case "auth/weak-password":
+                        setError("La contraseña debe tener al menos 6 caracteres.");
+                        break;
+                    case "auth/wrong-password":
+                    case "auth/user-not-found":
+                        setError("Correo o contraseña incorrectos.");
+                        break;
+                    case "auth/too-many-requests":
+                        setError("Demasiados intentos. Intenta más tarde.");
+                        break;
+                    default:
+                        setError("Ocurrió un error. Intenta de nuevo.");
+                }
             }
         }
     };

@@ -2,16 +2,25 @@
 
 import { useEffect, useState } from "react";
 import { auth, db } from "@/lib/firebase";
-import { signOut, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { useRouter } from "next/navigation";
+
+interface UserData {
+    uid: string;
+    email: string;
+    createdAt?: {
+        seconds: number;
+        nanoseconds: number;
+    };
+}
 
 export default function DashboardPage() {
 
     useAuthGuard();
 
-    const [userData, setUserData] = useState<any>(null);
+    const [userData, setUserData] = useState<UserData | null>(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
@@ -22,9 +31,9 @@ export default function DashboardPage() {
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
-                    setUserData(docSnap.data());
+                    setUserData(docSnap.data() as UserData);
                 } else {
-                    setUserData({ email: user.email, uid: user.uid });
+                    setUserData({ email: user.email || "", uid: user.uid });
                 }
             }
 
@@ -35,6 +44,8 @@ export default function DashboardPage() {
     }, [router]);
 
     if (loading) return <p className="text-center mt-10">Cargando datos...</p>;
+    
+    if (!userData) return <p className="text-center mt-10">No se pudo cargar tu perfil</p>;
 
     return (
         <main className="min-h-screen bg-gray-100 p-8 text-black">

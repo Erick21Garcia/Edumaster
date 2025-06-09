@@ -5,8 +5,17 @@ import { auth, db } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 
+interface UserData {
+    uid: string;
+    email: string;
+    createdAt?: {
+        seconds: number;
+        nanoseconds: number;
+    };
+}
+
 export default function PerfilPage() {
-    const [userData, setUserData] = useState<any>(null);
+    const [userData, setUserData] = useState<UserData | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -17,7 +26,7 @@ export default function PerfilPage() {
             const docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
-                setUserData(docSnap.data());
+                setUserData(docSnap.data() as UserData);
             }
 
             setLoading(false);
