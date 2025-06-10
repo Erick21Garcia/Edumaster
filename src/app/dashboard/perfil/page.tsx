@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { auth, db } from "@/lib/firebase";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 
@@ -15,6 +16,9 @@ interface UserData {
 }
 
 export default function PerfilPage() {
+
+    useAuthGuard();
+
     const [userData, setUserData] = useState<UserData | null>(null);
     const [loading, setLoading] = useState(true);
 

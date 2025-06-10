@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { auth, db } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, collection, getDoc, getDocs } from "firebase/firestore";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { useRouter } from "next/navigation";
 
@@ -23,6 +23,10 @@ export default function DashboardPage() {
     const [userData, setUserData] = useState<UserData | null>(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
+    const [inscripciones, setInscripciones] = useState<any[]>([]);
+    const [progresoGlobal, setProgresoGlobal] = useState(0);
+    const [finalizados, setFinalizados] = useState(0);
+    const [activos, setActivos] = useState(0);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -43,8 +47,33 @@ export default function DashboardPage() {
         return () => unsubscribe();
     }, [router]);
 
+    useEffect(() => {
+        const obtenerInscripciones = async () => {
+            if (!userData?.uid) return;
+
+            const ref = collection(db, "users", userData.uid, "inscripciones");
+            const snapshot = await getDocs(ref);
+
+            const data = snapshot.docs.map((doc) => doc.data());
+            setInscripciones(data);
+
+            const total = data.length;
+            const completados = data.filter((c) => c.estado === "finalizado").length;
+            const activos = total - completados;
+            const progreso = total
+                ? Math.round(data.reduce((sum, c) => sum + (c.progreso || 0), 0) / total)
+                : 0;
+
+            setFinalizados(completados);
+            setActivos(activos);
+            setProgresoGlobal(progreso);
+        };
+
+        obtenerInscripciones();
+    }, [userData]);
+
     if (loading) return <p className="text-center mt-10">Cargando datos...</p>;
-    
+
     if (!userData) return <p className="text-center mt-10">No se pudo cargar tu perfil</p>;
 
     return (
@@ -75,15 +104,15 @@ export default function DashboardPage() {
                 </section>
                 <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="bg-white rounded-xl p-6 shadow-md text-center mt-4">
-                        <p className="text-4xl font-bold text-blue-600">3</p>
+                        <p className="text-4xl font-bold text-blue-600">{activos}</p>
                         <p className="text-gray-600 mt-2">Cursos activos</p>
                     </div>
                     <div className="bg-white rounded-xl p-6 shadow-md text-center mt-4">
-                        <p className="text-4xl font-bold text-green-600">38</p>
-                        <p className="text-gray-600 mt-2">Notas registradas</p>
+                        <p className="text-4xl font-bold text-green-600">{finalizados}</p>
+                        <p className="text-gray-600 mt-2">Cursos finalizados</p>
                     </div>
                     <div className="bg-white rounded-xl p-6 shadow-md text-center mt-4">
-                        <p className="text-4xl font-bold text-purple-600">80%</p>
+                        <p className="text-4xl font-bold text-purple-600">{progresoGlobal}%</p>
                         <p className="text-gray-600 mt-2">Progreso general</p>
                     </div>
                 </section>
