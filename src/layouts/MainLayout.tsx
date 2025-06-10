@@ -9,7 +9,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
                     <h1 className="text-xl font-bold text-red-600">EduMaster</h1>
                     <ul className="flex space-x-6 text-gray-700">
                         <li><Link href="/" className="hover:text-red-600">Inicio</Link></li>
-                        <li><Link href="#" className="hover:text-red-600">Cursos</Link></li>
+                        <li><Link href="/curso" className="hover:text-red-600">Cursos</Link></li>
                         <li><Link href="/auth" className="hover:text-red-600">Iniciar sesión</Link></li>
                     </ul>
                 </nav>

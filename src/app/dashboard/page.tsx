@@ -23,7 +23,6 @@ export default function DashboardPage() {
     const [userData, setUserData] = useState<UserData | null>(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
-    const [inscripciones, setInscripciones] = useState<any[]>([]);
     const [progresoGlobal, setProgresoGlobal] = useState(0);
     const [finalizados, setFinalizados] = useState(0);
     const [activos, setActivos] = useState(0);
@@ -55,7 +54,6 @@ export default function DashboardPage() {
             const snapshot = await getDocs(ref);
 
             const data = snapshot.docs.map((doc) => doc.data());
-            setInscripciones(data);
 
             const total = data.length;
             const completados = data.filter((c) => c.estado === "finalizado").length;
