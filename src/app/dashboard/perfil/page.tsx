@@ -48,23 +48,30 @@ export default function PerfilPage() {
     }
 
     return (
-        <section className="max-w-md mx-auto bg-white p-6 rounded-xl shadow text-black">
-            <h1 className="text-2xl sm:text-3xl font-bold mb-6">👤 Tu perfil</h1>
-            <ul className="space-y-4 text-gray-700 text-sm sm:text-base">
-                <li>
-                    <strong>Correo:</strong> {userData.email}
-                </li>
-                <li>
-                    <strong>UID:</strong> {userData.uid}
-                </li>
-                <li>
-                    <strong>Fecha de registro:</strong>{" "}
-                    {userData.createdAt?.seconds
-                        ? new Date(userData.createdAt.seconds * 1000).toLocaleString()
-                        : "No disponible"}
-                </li>
-            </ul>
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="max-w-4xl mx-auto">
+                <header className="flex justify-between items-center mb-8">
+                    <h1 className="text-2xl sm:text-3xl font-bold">👤 Tu perfil</h1>
+                </header>
+                <section className="bg-white shadow-md rounded-xl p-6">
+                    <ul className="space-y-2 text-gray-700">
+                        <li>
+                            <strong>Correo:</strong> {userData.email}
+                        </li>
+                        <li>
+                            <strong>UID:</strong> {userData.uid}
+                        </li>
+                        <li>
+                            <strong>Registrado el:</strong>{" "}
+                            {userData.createdAt?.seconds
+                                ? new Date(userData.createdAt.seconds * 1000).toLocaleString()
+                                : "Sin fecha"}
+                        </li>
+                    </ul>
+                </section>
+            </div>
         </section>
+
     );
 
 }
