@@ -72,25 +72,28 @@ export default function MisCursosPage() {
     }
 
     return (
-        <section>
-            <h1 className="text-2xl font-bold mb-6">🎓 Mis cursos</h1>
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-6">🎓 Mis cursos</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {inscripciones.map((curso) => (
-                    <div key={curso.cursoId} className={`p-6 rounded-xl shadow ${curso.estado === "finalizado"
-                        ? "bg-green-100 text-green-800 border border-green-300"
-                        : "bg-white text-black"
-                        }`}>
-                        <h2 className="text-lg font-semibold text-blue-700 mb-2">
+                    <div
+                        key={curso.cursoId}
+                        className={`p-6 rounded-xl shadow ${curso.estado === "finalizado"
+                                ? "bg-green-100 text-green-800 border border-green-300"
+                                : "bg-white text-black"
+                            }`}
+                    >
+                        <h2 className="text-lg sm:text-xl font-semibold text-blue-700 mb-2">
                             {curso.nombre || "Sin nombre"}
                         </h2>
-                        <p className="text-gray-600 text-sm mb-1">
+                        <p className="text-gray-600 text-sm sm:text-base mb-1">
                             {curso.descripcion || "Sin descripción"}
                         </p>
-                        <p className="text-gray-500 text-sm">👨‍🏫 {curso.docente || "No asignado"}</p>
-                        <p className="text-gray-500 text-sm">
+                        <p className="text-gray-500 text-sm sm:text-base">👨‍🏫 {curso.docente || "No asignado"}</p>
+                        <p className="text-gray-500 text-sm sm:text-base">
                             🎓 Créditos: {curso.creditos ?? "N/A"}
                         </p>
-                        <p className="text-sm">
+                        <p className="text-sm sm:text-base">
                             Estado:{" "}
                             <span
                                 className={`font-semibold ${curso.estado === "finalizado" ? "text-green-700" : "text-gray-700"
@@ -99,10 +102,10 @@ export default function MisCursosPage() {
                                 {curso.estado || "activo"}
                             </span>
                         </p>
-                        <p className="text-gray-500 text-sm">
+                        <p className="text-gray-500 text-sm sm:text-base">
                             Progreso: <strong>{curso.progreso ?? 0}%</strong>
                         </p>
-                        <p className="text-gray-500 text-sm">
+                        <p className="text-gray-500 text-sm sm:text-base">
                             Inscrito el:{" "}
                             <strong>
                                 {curso.inscritoEn?.seconds
@@ -114,13 +117,13 @@ export default function MisCursosPage() {
                         <div className="mt-4 flex flex-col gap-2">
                             <Link
                                 href={`/dashboard/cursos/${curso.cursoId}`}
-                                className="text-center bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+                                className="text-center bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition text-sm sm:text-base"
                             >
                                 Ver curso
                             </Link>
                             <button
                                 onClick={() => cancelarInscripcion(curso.cursoId)}
-                                className="text-center bg-red-500 text-white py-2 rounded hover:bg-red-600 transition"
+                                className="text-center bg-red-500 text-white py-2 rounded hover:bg-red-600 transition text-sm sm:text-base"
                             >
                                 Cancelar inscripción
                             </button>
@@ -130,4 +133,5 @@ export default function MisCursosPage() {
             </div>
         </section>
     );
+
 }

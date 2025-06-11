@@ -48,9 +48,9 @@ export default function PerfilPage() {
     }
 
     return (
-        <section className="max-w-xl mx-auto bg-white p-6 rounded-xl shadow text-black">
-            <h1 className="text-2xl font-bold mb-4">👤 Tu perfil</h1>
-            <ul className="space-y-3 text-gray-700">
+        <section className="max-w-md mx-auto bg-white p-6 rounded-xl shadow text-black">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-6">👤 Tu perfil</h1>
+            <ul className="space-y-4 text-gray-700 text-sm sm:text-base">
                 <li>
                     <strong>Correo:</strong> {userData.email}
                 </li>
@@ -66,4 +66,5 @@ export default function PerfilPage() {
             </ul>
         </section>
     );
+
 }

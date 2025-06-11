@@ -81,18 +81,18 @@ export default function CursoDetallePage() {
     if (!curso) return <p className="text-center mt-10">No se encontró el curso.</p>;
 
     return (
-        <section className="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow text-black">
-            <h1 className="text-3xl font-bold text-blue-700 mb-4">{curso.nombre}</h1>
-            <p className="text-gray-700 mb-2">{curso.descripcion}</p>
-            <p className="text-gray-600 mb-2">👨‍🏫 Docente: {curso.docente}</p>
-            <p className="text-gray-600 mb-2">🎓 Créditos: {curso.creditos}</p>
-            <p className="text-gray-600 mb-2">
+        <section className="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow text-black px-4 sm:px-6 lg:px-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-blue-700 mb-4">{curso.nombre}</h1>
+            <p className="text-gray-700 mb-2 text-sm sm:text-base">{curso.descripcion}</p>
+            <p className="text-gray-600 mb-2 text-sm sm:text-base">👨‍🏫 Docente: {curso.docente}</p>
+            <p className="text-gray-600 mb-2 text-sm sm:text-base">🎓 Créditos: {curso.creditos}</p>
+            <p className="text-gray-600 mb-2 text-sm sm:text-base">
                 📆 Inscrito el:{" "}
                 {curso.inscritoEn?.seconds
                     ? new Date(curso.inscritoEn.seconds * 1000).toLocaleDateString()
                     : "Sin fecha"}
             </p>
-            <p className="text-gray-600 mb-2">📌 Estado: {curso.estado || "activo"}</p>
+            <p className="text-gray-600 mb-2 text-sm sm:text-base">📌 Estado: {curso.estado || "activo"}</p>
             <div className="mt-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                     📊 Actualizar progreso:
@@ -111,14 +111,12 @@ export default function CursoDetallePage() {
                 {curso.estado !== "finalizado" && (
                     <button
                         onClick={handleFinalizar}
-                        className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+                        className="mt-4 w-full sm:w-auto bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
                     >
                         Marcar como finalizado
                     </button>
                 )}
             </div>
-
         </section>
-
     );
 }

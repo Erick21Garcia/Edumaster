@@ -18,8 +18,15 @@ export default function CursosPage() {
     const [cursos, setCursos] = useState<Curso[]>([]);
     const [userId, setUserId] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (!isMounted) return;
+
         const fetchCursos = async () => {
             try {
                 const querySnapshot = await getDocs(collection(db, "cursos"));
@@ -43,7 +50,7 @@ export default function CursosPage() {
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [isMounted]);
 
     useEffect(() => {
         if (mensaje) {
@@ -70,47 +77,47 @@ export default function CursosPage() {
         setMensaje(`Te has inscrito en: ${curso.nombre}`);
     };
 
-    if (loading) {
+    if (!isMounted || loading) {
         return <p className="text-center mt-10">Cargando cursos...</p>;
     }
 
     return (
-        <section>
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-                <h1 className="text-2xl font-bold">📚 Cursos disponibles</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold">📚 Cursos disponibles</h1>
                 <a
                     href="/dashboard/miscursos"
-                    className="mt-2 sm:mt-0 inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+                    className="mt-3 sm:mt-0 inline-block bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition text-sm sm:text-base font-medium"
                 >
                     Ver mis cursos
                 </a>
             </div>
             {mensaje && (
-                <div className="bg-green-100 text-green-700 border border-green-300 px-4 py-3 rounded mb-4">
+                <div className="bg-green-100 text-green-700 border border-green-300 px-4 py-3 rounded mb-6">
                     {mensaje}
                 </div>
             )}
-            {loading ? (
-                <p>Cargando cursos...</p>
-            ) : (
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {cursos.map((curso) => (
-                        <div key={curso.id} className="bg-white p-6 rounded-xl shadow">
-                            <h2 className="text-lg font-semibold text-blue-700 mb-2">{curso.nombre}</h2>
-                            <p className="text-gray-600 text-sm mb-2">{curso.descripcion}</p>
-                            <p className="text-sm text-gray-500">👨‍🏫 {curso.docente}</p>
-                            <p className="text-sm text-gray-500">🎓 Créditos: {curso.creditos}</p>
-                            <button
-                                className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-                                onClick={() => handleInscribirse(curso)}
-                            >
-                                Inscribirme
-                            </button>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {cursos.map((curso) => (
+                    <div
+                        key={curso.id}
+                        className="bg-white p-6 rounded-xl shadow flex flex-col justify-between"
+                    >
+                        <div>
+                            <h2 className="text-lg sm:text-xl font-semibold text-blue-700 mb-3">{curso.nombre}</h2>
+                            <p className="text-gray-600 text-sm sm:text-base mb-2">{curso.descripcion}</p>
+                            <p className="text-sm sm:text-base text-gray-500">👨‍🏫 {curso.docente}</p>
+                            <p className="text-sm sm:text-base text-gray-500">🎓 Créditos: {curso.creditos}</p>
                         </div>
-                    ))}
-                </div>
-            )}
+                        <button
+                            className="mt-6 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition text-sm sm:text-base font-semibold"
+                            onClick={() => handleInscribirse(curso)}
+                        >
+                            Inscribirme
+                        </button>
+                    </div>
+                ))}
+            </div>
         </section>
     );
 }
